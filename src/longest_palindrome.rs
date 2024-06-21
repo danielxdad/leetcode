@@ -1,4 +1,5 @@
-#[allow(dead_code)]
+#![allow(dead_code)]
+
 pub fn longest_palindrome_1(s: String) -> String {
     let mut max_pal_substr = String::new();
 
@@ -53,21 +54,21 @@ pub fn longest_palindrome(s: String) -> String {
                     start_offset = i;
                     end_offset = i;
                 }
-    
+
                 if i - end_offset < 2 {
                     end_offset = i;
                 } else {
                     start_offset = i;
                     end_offset = i + 1;
                 }
-                
+
                 if (acc.1 - acc.0) < (end_offset - start_offset) {
                     acc = (start_offset, end_offset);
                 }
-                
+
                 acc
             });
-        
+
         if (max_acc.1 - max_acc.0) < (acc.1 - acc.0) {
             max_acc = acc;
         }
@@ -77,7 +78,6 @@ pub fn longest_palindrome(s: String) -> String {
         .and_then(|slice| Some(String::from(slice)))
         .unwrap_or(String::new())
 }
-
 
 #[cfg(test)]
 mod test {
@@ -93,10 +93,10 @@ mod test {
             ("cbbd", "bb"),
             ("abb", "bb"),
             ("aacabdkacaa", "aca"),
-            ("bb", "bb")
+            ("bb", "bb"),
         ];
         for (input, output) in strs {
             assert!(longest_palindrome_1(input.to_string()) == output.to_string());
-        }   
+        }
     }
 }
