@@ -17,8 +17,10 @@ cases = [
 for s1, s2 in cases:
     print('Case: s1="%s", s2="%s"' % (s1, s2))
 
-    s1 = sorted(list(s1))
-    s2 = sorted(list(s2))
+    s1 = list(s1)
+    s2 = list(s2)
+    s1.sort()
+    s2.sort()
 
     s1_small = True
     s2_small = True
