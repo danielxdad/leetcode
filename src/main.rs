@@ -3,24 +3,25 @@ mod check_if_string_can_break_another_string;
 mod elimination_game;
 mod longest_palindrome;
 mod make_array_strictly_increasing;
+mod reverse_integer;
 mod string_to_integer_atoi;
 
 fn main() {
-    // println!("Run: cargo test");
+    println!("Run: cargo test");
 
-    for (s1, s2) in [
-        ("abc", "xya"),
-        ("abe", "acd"),
-        ("leetcodee", "interview"),
-        ("mgldgsvnsgpdvm", "jqpaktmjafgkzs"),
-    ] {
-        println!(
-            "s1=\"{}\", s2=\"{}\": {:?}",
-            s1,
-            s2,
-            check_if_string_can_break_another_string::solution(String::from(s1), String::from(s2))
-        );
-    }
+    //for (s1, s2) in [
+    //    ("abc", "xya"),
+    //    ("abe", "acd"),
+    //    ("leetcodee", "interview"),
+    //    ("mgldgsvnsgpdvm", "jqpaktmjafgkzs"),
+    //] {
+    //    println!(
+    //        "s1=\"{}\", s2=\"{}\": {:?}",
+    //        s1,
+    //        s2,
+    //        check_if_string_can_break_another_string::solution(String::from(s1), String::from(s2))
+    //    );
+    //}
 
     // println!("{}", string_to_integer_atoi::my_atoi_1("42".to_string()));
 

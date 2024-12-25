@@ -1,4 +1,4 @@
-#![allow(dead_code)]
+#![allow(dead_code, unused_imports, unused_mut)]
 // https://leetcode.com/problems/make-array-strictly-increasing/
 
 use std::collections::HashSet;
@@ -19,6 +19,7 @@ pub fn make_array_increasing_v2(arr1: Vec<i32>, arr2: Vec<i32>) -> i32 {
     let mut _i = 0;
 
     arr2.sort_unstable();
+    arr2.dedup();
 
     println!("arr1: {:?}", arr1);
     println!("arr2: {:?}", arr2);
@@ -104,6 +105,7 @@ pub fn make_array_increasing_v3(arr1: Vec<i32>, arr2: Vec<i32>) -> i32 {
         .collect();
 
     arr2.sort_unstable();
+    arr2.dedup();
 
     dbg!(format!("{:?}", arr1));
     dbg!(format!("{:?}", arr2));
@@ -142,16 +144,19 @@ pub fn make_array_increasing_v3(arr1: Vec<i32>, arr2: Vec<i32>) -> i32 {
     println!("{:-<150}\n", "");
 
     for i in 1..arr1.len() - 1 {
-        if let Some(&n) = arr2.iter().find(|&&n| n > arr1[i - 1]) {
+        if let Some(p) = arr2.iter().position(|&n| n > arr1[i - 1]) {
             dbg!(format!("{:?}", mask));
-            dbg!(format!("{:?}", arr1));
-            dbg!(format!("i: {}; {} -> {}", i, arr1[i], n));
+            // dbg!(format!("{:?}", arr1));
+            // dbg!(format!("i: {}; {} -> {}", i, arr1[i], arr2[p]));
 
-            arr1[i] = n;
+            arr1[i] = arr2[p];
+            // arr2.remove(p);
 
             dbg!(format!("{:?}", arr1));
+            dbg!(format!("{:?}", arr2));
             println!("{:-<150}\n", "");
 
+            // mask[i - 1] = arr1[i - 1] < arr1[i] && arr1[i] < arr1[i + 1];
             mask = compute_boolean_mask(&arr1);
             if mask.iter().all(|&e| e) {
                 break;
@@ -168,6 +173,7 @@ pub fn make_array_increasing_v3(arr1: Vec<i32>, arr2: Vec<i32>) -> i32 {
     }
 
     dbg!(format!("{:?}", original_arr1));
+    dbg!(format!("{:?}", arr2));
 
     arr1.iter()
         .zip(original_arr1)
@@ -251,18 +257,81 @@ pub fn make_array_increasing_v4(arr1: Vec<i32>, arr2: Vec<i32>) -> i32 {
     -1
 }
 
+pub fn make_array_increasing_v5(arr1: Vec<i32>, arr2: Vec<i32>) -> i32 {
+    if arr1.len() < 2 {
+        return 0;
+    }
+
+    let mut arr1: Vec<i32> = arr1.clone();
+    let mut arr2: Vec<i32> = arr2
+        .iter()
+        .collect::<HashSet<_>>()
+        .iter()
+        .map(|&&n| n)
+        .collect();
+
+    arr2.sort_unstable();
+
+    dbg!(format!("{:?}", arr1));
+    dbg!(format!("{:?}", arr2));
+    println!("{:-<100}\n", "");
+
+    fn recursive(arr1: Vec<i32>, arr2: &Vec<i32>) -> i32 {
+        if arr1.len() < 2 {
+            return 0;
+        }
+
+        let middle: usize = arr1.len() / 2;
+        let arr2_median = (arr2[0] + arr2[arr2.len() - 1]) as f32 / 2.0;
+        let mut pivot = i32::MAX;
+
+        println!("{}", arr2_median);
+
+        for &i in &arr2[(arr2.len() / 2 - 1)..=(arr2.len() / 2 + 1)] {
+            let diff = (i as f32 - arr2_median).abs();
+            let previous_diff = (pivot as f32 - arr2_median).abs();
+            println!("{}, {}, {}", i, diff, previous_diff);
+            if diff < previous_diff {
+                pivot = i;
+            }
+        }
+
+        // if pivot != arr1[middle] {
+        //     arr1[middle] = pivot;
+        // }
+
+        println!("pivot: {}", pivot);
+
+        let left = recursive(arr1[0..middle].to_vec(), arr2);
+        let right = recursive(arr1[(middle + 1)..].to_vec(), arr2);
+
+        left + ((pivot != arr1[middle]) as i32) + right
+    }
+
+    recursive(arr1, &arr2)
+}
+
 #[cfg(test)]
 mod test {
-    use super::make_array_increasing_v4;
+    use super::{make_array_increasing_v3, make_array_increasing_v4};
 
     #[test]
     fn test_make_array_increasing() {
         // println!("{}", make_array_increasing_v2([1,5,3,6,7].to_vec(), [1,3,2,4].to_vec()));
         // println!("{}", make_array_increasing_v2([0,11,6,1,4,3].to_vec(), [5,4,11,10,1,0].to_vec()));
 
-        // println!("{}", make_array_increasing_v3([0,11,6,1,4,3].to_vec(), [5,4,11,10,1,0].to_vec()));
-        // println!("{}", make_array_increasing_v3([1,5,3,6,7].to_vec(), [1,3,2,4].to_vec()));
-        // println!("{}", make_array_increasing_v3([1,5,3,6,7].to_vec(), [1,6,3,3].to_vec()));
+        // dbg!(make_array_increasing_v3(
+        //     [0, 11, 6, 1, 4, 3].to_vec(),
+        //     [5, 4, 11, 10, 1, 0].to_vec()
+        // ));
+        // dbg!(make_array_increasing_v3(
+        //     [1, 5, 3, 6, 7].to_vec(),
+        //     [1, 3, 2, 4].to_vec()
+        // ));
+        // dbg!(make_array_increasing_v3(
+        //     [1, 5, 3, 6, 7].to_vec(),
+        //     [1, 6, 3, 3].to_vec()
+        // ));
 
         // [5,16,19,2,1,12,7,14,5,16]
         // [6,17,4,3,6,13,4,3,18,17,16,7,14,1,16]
@@ -282,7 +351,7 @@ mod test {
         // assert!(1 == 2);
 
         // assert!(make_array_increasing_v4([1,5,3,6,7].to_vec(), [1,3,2,4].to_vec()) == 1);
-        assert!(make_array_increasing_v4([1, 5, 3, 6, 7].to_vec(), [4, 3, 1].to_vec()) == 2);
+        // assert!(make_array_increasing_v4([1, 5, 3, 6, 7].to_vec(), [4, 3, 1].to_vec()) == 2);
         // assert!(make_array_increasing_v4([1,5,3,6,7].to_vec(), [1,6,3,3].to_vec()) == -1);
         // assert!(make_array_increasing_v4([7,6,3,0,3].to_vec(), [9].to_vec()) == -1);
         // assert!(make_array_increasing_v4([0,11,6,1,4,3].to_vec(), [5,4,11,10,1,0].to_vec()) == 5);

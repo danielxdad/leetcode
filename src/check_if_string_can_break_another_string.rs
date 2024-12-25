@@ -1,4 +1,5 @@
 // https://leetcode.com/problems/check-if-a-string-can-break-another-string/description/
+#![allow(dead_code)]
 
 pub fn solution(s1: String, s2: String) -> bool {
     let mut s1_vec = Vec::from(s1.as_str());

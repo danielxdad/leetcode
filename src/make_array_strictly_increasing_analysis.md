@@ -63,3 +63,33 @@ arr2 = [1, 3, 6]
 [1, 5, 3, 6, 7]         -> mix
 
 -1
+
+----------------------------------------------------------
+2024-06-29:
+
+El elemento que parte en dos subarrays debe ser el mas cercano al valor medio en el maximo y minimo del "array 2"
+
+De forma recursiva particionar el array 1 y array 2 en [...array_1_left], center, [array_1_right...], luego de actualizar center en base al statement anterior
+y reinvocar a la funcion de esta forma -> func([...array_1_left], [...array_2_left]) y func([...array_1_right], [...array_2_right]) 
+para luego en retorno unir -> result_array_1 + center + result_array_2
+
+[5, 16, 19, 2, 1, 12, 7, 14, 5, 16]     [1, 3, 4, 6, 7, 13, 14, 16, 17, 18] -> ( (18 + 1) / 2 = 9.5 ~ 7: (abs(9.5 - 7) = 2.5, abs(9.5 - 13) = 3.5) )
+               |
+[5, 16, 19, 2, 7, 12, 7, 14, 5, 16]
+        |
+[5, 16, 4, 2, 7, 12, 7, 14, 5, 16]
+    |
+[5, 3, 4, 2, 7, 12, 7, 14, 5, 16]
+ |
+[1, 3, 4, 2, 7, 12, 7, 14, 5, 16]
+          |
+[1, 3, 4, 6, 7, 12, 7, 14, 5, 16]       -> (12 + 16) / 2 = 14 !!!
+                    | 
+[1, 3, 4, 6, 7, 12, 13, 14, 5, 16]
+                            |
+[1, 3, 4, 6, 7, 12, 13, 14, 16, 16]
+                                |
+[1, 3, 4, 6, 7, 12, 13, 14, 16, 17]
+
+8 cambios
+
